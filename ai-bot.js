@@ -7,11 +7,11 @@ const sim = [
 	[ 1, 2, 2, 1, 2, 2, 2 ]
 ];
 
-const dummyBoard = sim;
+const dummyBoard = board;
 
 const bot = 1;
 const human = 2;
-let count = 1;
+let count = 0;
 
 function aiTurn() {
 	const winningSpot = checkWin(bot, dummyBoard);
