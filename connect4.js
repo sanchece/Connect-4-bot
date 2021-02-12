@@ -14,7 +14,6 @@ const board = []; // array of rows, each row is array of cells  (board[y][x])
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
  */
-
 function makeBoard() {
   
   for(let i=0; i<HEIGHT;i++){
@@ -31,7 +30,6 @@ function makeBoard() {
 function makeHtmlBoard() {
   // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
   const htmlBoard=document.getElementById("boardM");
-
   // TODO: add comment for this code
   // create playing row in HTML
   var top = document.createElement("tr");
@@ -59,7 +57,6 @@ function makeHtmlBoard() {
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
-
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
   for(let y=HEIGHT-1;y>=0;y--){
@@ -71,20 +68,16 @@ function findSpotForCol(x) {
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
-
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
   const piece= document.createElement("div");
   const spot=document.getElementById(`${y}-${x}`);
   piece.classList.add("piece");
   piece.classList.add(`p${currPlayer}`);
-  spot.append(piece);
-
-  
+  spot.append(piece);  
 }
 
 /** endGame: announce game end */
-
 function endGame(msg) {
   // TODO: pop up alert message
   alert(msg);
@@ -95,7 +88,6 @@ function endGame(msg) {
 function handleClick(evt) {
   // get x from ID of clicked cell
   var x = +evt.target.id;
-
   // get next spot in column (if none, ignore click)
   var y = findSpotForCol(x);
   if (y === null) {
@@ -114,8 +106,6 @@ function handleClick(evt) {
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
- 
-
   if(board[0].every(x=>x)){
     return endGame("It's a tie!");
   }
@@ -124,10 +114,9 @@ function handleClick(evt) {
   if(currPlayer===2){
     currPlayer=1;
     moveAI();
-  }
+  }  
   else
-  currPlayer=1;
-  
+  currPlayer=2;
 }
 
 function moveAI(){
@@ -142,10 +131,8 @@ function moveAI(){
   if (checkForWin()) {
     if(currPlayer===1){
       return endGame(`ai player won!`);
-    }
-    return endGame(`Player ${currPlayer} won!`);
+    }   
   }
-
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
  
@@ -160,7 +147,6 @@ function moveAI(){
   }
   else
   currPlayer=1;
-
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */

@@ -1,69 +1,286 @@
-const dummyBoard = board;
 const sim = [
 	[ 0, 0, 0, 0, 0, 0, 0 ],
 	[ 0, 0, 0, 0, 0, 0, 0 ],
-	[ 0, 0, 1, 1, 0, 0, 0 ],
-	[ 0, 0, 2, 2, 0, 0, 0 ],
-	[ 0, 1, 2, 1, 2, 1, 2 ],
-	[ 1, 2, 1, 2, 1, 1, 1 ]
+	[ 0, 0, 0, 0, 0, 0, 0 ],
+	[ 0, 0, 0, 0, 0, 0, 0 ],
+	[ 0, 0, 1, 0, 0, 0, 0 ],
+	[ 0, 0, 2, 1, 0, 0, 0 ]
 ];
-const player1=1;
-const player2=2;
+
+const dummyBoard = board;
+
+const bot = 1;
+const human = 2;
+let count = 0;
+
+function aiTurn() {
+	const winningSpot = checkWin(bot, dummyBoard);
+	const losingSpot = checkWin(human, dummyBoard);
+	const firstMoves = makeBoards(bot, dummyBoard); //bot
+	removeFlaggedSpotsFromFM(firstMoves);
+
+	const secondMoves = makeBoardsForFM(firstMoves); //human
+	const possibleWins = findPotentialWinningSpots(secondMoves, firstMoves);
+
+	const thirdMoves = makeBoardsForSM(secondMoves); //bot
+	const leastLoses = findLeastLosingSpot(thirdMoves, firstMoves);
+
+	const fourthMoves = makeBoardsForTM(thirdMoves); //human
+	const possibleWins2 = findPotentialWinningSpots2(fourthMoves, firstMoves);
 
 
+	if (winningSpot.length > 0) {
+		count++;
+		return moveHere(winningSpot[0]);
+	} else if (losingSpot.length > 0) {
+		count++;
+		return moveHere(losingSpot[0]);
+	} else if (count < 1) {
+		count++;
+		let possibleMoves = checkPosMoves(dummyBoard);
+		for (let thisMove of possibleMoves) {
+			let y = thisMove[0];
+			let x = thisMove[1];
+			if (dummyBoard[y][x +1] === human) {
+				return moveHere([ y, x ]);
+			}
+		}
+		//	 possibleMoves=checkPosMoves(dummyBoard);
+		 	 let rand=Math.floor(Math.random()*possibleMoves.length);
 
-
-
-function simulateThirdMoves(secondMove,thirdMove){
-    for(let arrBoard of secondMove){
-        const thirdMoves=[];
-        for(let board of arrBoard){
-            thirdMoves.push(simulateMoves(player1,board));
-             
-        }
-        thirdMove.push(thirdMoves);
-    }
+		 	return moveHere(possibleMoves[rand]);
+	} 
+	else {
+		
+		// const fifthMoves = makeBoardsForFrthM(fourthMoves); //bot
+		// const leastLoses2 = findLeastLosingSpot2(fifthMoves, firstMoves);
+		// if(leastLoses2===possibleWins2){
+		// 	return moveHere(leastLoses2);
+		// }
+		// else if(leastLoses2.length>0){
+		// 	return moveHere(leastLoses2);
+		// }
+		 //if(possibleWins2.length>0){
+		// 	return moveHere(possibleWins2);
+		// }
+        
+		if (leastLoses.length> 0) {
+			return moveHere(leastLoses);
+		} 
+		else if (possibleWins.length>0) {
+			return moveHere(possibleWins[0]);
+		}
+		else{
+			return moveHere(possibleWins2);
+		}
+	}
 }
 
-function simulateSecondMoves(firstMove,secondMove){
-    for(let board of firstMove){
-        secondMove.push(simulateMoves(player2,board));        
-    }
+function findMoveFromBoard(board, currBoard) {
+	for (let y = 0; y < board.length; y++) {
+		for (let x = 0; x < board[0].length; x++) {
+			if (board[y][x] !== currBoard[y][x]) {
+				return [ y, x ];
+			}
+		}
+	}
 }
 
-
-function findMoveFromBoard(board,currBoard){
-    for(let y=0;y<board.length;y++){
-        for(let x=0;x<board[0].length;x++){
-            if(board[y][x]!==currBoard[y][x]){
-                return [y,x];
-            }
-        }
-    }
-
-
+function removeFlaggedSpotsFromFM(firstMoves) {
+	// const flaggedSpots=[];
+	firstMoves.forEach((board, i) => {
+		if (checkWin(human, board).length > 0) {
+			//    flaggedSpots.push(flaggedSpot[0])
+			firstMoves.splice(i, 1);
+		}
+	});
 }
 
+function findPotentialWinningSpots2(fourthMove, firstMoves) {
+	const thisArr2 = [];
+	let c2 = 0;
+	for (let thirdMove of fourthMove) {
+		for (let secondMove of thirdMove) {
+			for (let firstMove of secondMove) {
+				for (let board of firstMove) {
+					const winningSpot = checkWin(bot, board);
+					if (winningSpot.length > 0) {
+						c2++;
+						break;
+					}
+				}
+			}
+		}
+		thisArr2.push(c2);
+		c2 = 0;
+	}
+	const max = Math.max(...thisArr2);
+	// console.log(thisArr2,"<--thisArr, min-->",max);
+	// console.log(thisArr2.indexOf(max),"<--index. move--> ",findMoveFromBoard(firstMoves[thisArr2.indexOf(max)],dummyBoard));
 
-
-function simulateMoves(currPlayer,board){
-    const possibleMoves= checkPosMoves(board);
-    const p1Moves=[];
-
-    for(let thisMove of possibleMoves){
-      
-       const newBoard= JSON.parse(JSON.stringify(board));
-       newBoard[thisMove[0]][thisMove[1]]=currPlayer;
-       p1Moves.push(newBoard);
-
+	return findMoveFromBoard(firstMoves[thisArr2.indexOf(max)], dummyBoard);
 }
 
-return p1Moves;
+function findPotentialWinningSpots(secondMove, firstMoves) {
+	const potentialWinningBoards = [];
+	for (let firstMove of secondMove) {
+		for (let board of firstMove) {
+			const winningSpot = checkWin(bot, board);
+			if (winningSpot.length > 0) {
+				potentialWinningBoards.push(findMoveFromBoard(firstMoves[secondMove.indexOf(firstMove)], dummyBoard));
+				break;
+			}
+		}
+	}
+	return potentialWinningBoards;
 }
 
-function moveHere(pos){
-    console.log("move here",pos);
-    return pos;
+function findLeastLosingSpot2(fifthMoves, firstMoves) {
+	let c = 0;
+	let thisArr = [];
+	for (let fourthMoves of fifthMoves) {
+		for (let thirdMove of fourthMoves) {
+			for (let first of thirdMove) {
+				for (let second of first) {
+					for (let board of second) {
+						const winningSpot = checkWin(human, board);
+						if (winningSpot.length > 0) {
+							c++;
+						}
+					}
+				}
+			}
+		}
+		thisArr.push(c);
+		c = 0;
+	}
+
+	const min = Math.min(...thisArr);
+	// 	 console.log(thisArr,"<--thisArr, min-->",min);
+	// console.log(thisArr.indexOf(min),"<--index. move--> ",findMoveFromBoard(firstMoves[thisArr.indexOf(min)],dummyBoard));
+	return findMoveFromBoard(firstMoves[thisArr.indexOf(min)], dummyBoard);
+}
+function findLeastLosingSpot(thirdMove, firstMoves) {
+	let c = 0;
+	let thisArr = [];
+	for (let first of thirdMove) {
+		for (let second of first) {
+			for (let board of second) {
+				const winningSpot = checkWin(human, board);
+				if (winningSpot.length > 0) {
+					c++;
+				}
+			}
+		}
+		thisArr.push(c);
+		c = 0;
+	}
+	const min = Math.min(...thisArr);
+	// console.log(thisArr,"<--thisArr, min-->",min);
+	// console.log(thisArr.indexOf(min),"<--index. move--> ",findMoveFromBoard(firstMoves[thisArr.indexOf(min)],dummyBoard));
+	return findMoveFromBoard(firstMoves[thisArr.indexOf(min)], dummyBoard);
+}
+
+function makeBoards(currPlayer, board) {
+	const possibleMoves = checkPosMoves(board);
+	const boards = [];
+	for (let thisMove of possibleMoves) {
+		const newBoard = JSON.parse(JSON.stringify(board));
+		newBoard[thisMove[0]][thisMove[1]] = currPlayer;
+		boards.push(newBoard);
+	}
+	return boards;
+}
+
+function makeBoardsForFM(firstMoves) {
+	const secondMoves = [];
+	for (let board of firstMoves) {
+		secondMoves.push(makeBoards(human, board));
+	}
+	return secondMoves;
+}
+
+function makeBoardsForSM(secondMoves) {
+	const thirdMoves = [];
+	for (let firstMoves of secondMoves) {
+		const thirdMove = [];
+		for (let board of firstMoves) {
+			thirdMove.push(makeBoards(bot, board));
+		}
+		thirdMoves.push(thirdMove);
+	}
+	return thirdMoves;
+}
+
+function makeBoardsForTM(thirdMoves) {
+	const fourthMoves = [];
+	for (let secondMoves of thirdMoves) {
+		const third3Moves = [];
+		for (let firstMoves of secondMoves) {
+			const thirdMove = [];
+			for (let board of firstMoves) {
+				thirdMove.push(makeBoards(human, board));
+			}
+			third3Moves.push(thirdMove);
+		}
+		fourthMoves.push(third3Moves);
+	}
+	return fourthMoves;
+}
+
+function makeBoardsForFrthM(fourthMoves) {
+	const fifthMoves = [];
+	for (let thirdMoves of fourthMoves) {
+		const fourth4Moves = [];
+		for (let secondMoves of thirdMoves) {
+			const third3Moves = [];
+			for (let firstMoves of secondMoves) {
+				thirdMove = [];
+				for (let board of firstMoves) {
+					thirdMove.push(makeBoards(bot, board));
+				}
+				third3Moves.push(thirdMove);
+			}
+			fourth4Moves.push(third3Moves);
+		}
+		fifthMoves.push(fourth4Moves);
+	}
+	return fifthMoves;
+}
+
+function moveHere(pos) {
+	console.log('bot move here', pos);
+	return pos;
+}
+
+function checkWin(currPlayer, board) {
+	const possibleMoves = checkPosMoves(board);
+	const wins = [];
+	for (let thisMove of possibleMoves) {
+		const predBoard = JSON.parse(JSON.stringify(board));
+		let yMove = thisMove[0];
+		let xMove = thisMove[1];
+		predBoard[yMove][xMove] = currPlayer;
+
+		function _win(cells) {
+			return cells.every(
+				([ y, x ]) => y >= 0 && y < HEIGHT && x >= 0 && x < WIDTH && predBoard[y][x] === currPlayer
+			);
+		}
+		for (let y = 0; y < HEIGHT; y++) {
+			for (let x = 0; x < WIDTH; x++) {
+				var horiz = [ [ y, x ], [ y, x + 1 ], [ y, x + 2 ], [ y, x + 3 ] ];
+				var vert = [ [ y, x ], [ y + 1, x ], [ y + 2, x ], [ y + 3, x ] ];
+				var diagDR = [ [ y, x ], [ y + 1, x + 1 ], [ y + 2, x + 2 ], [ y + 3, x + 3 ] ];
+				var diagDL = [ [ y, x ], [ y + 1, x - 1 ], [ y + 2, x - 2 ], [ y + 3, x - 3 ] ];
+
+				if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+					wins.push([ yMove, xMove ]);
+				}
+			}
+		}
+	}
+	return wins;
 }
 
 function checkPosMoves(board) {
@@ -78,165 +295,4 @@ function checkPosMoves(board) {
 	}
 	return possibleMoves;
 }
-
-function checkWin(currPlayer,board) { 
-    const possibleMoves= checkPosMoves(board);
-    const wins=[];
-	for (let thisMove of possibleMoves) {  
-        const predBoard=JSON.parse(JSON.stringify(board));    
-        let yMove=thisMove[0];
-        let xMove=thisMove[1];
-        predBoard[yMove][xMove]=currPlayer;
-        
-       //console.log(predBoard);
-		function _win(cells) {
-			return cells.every(([ y, x ]) => 
-            y >= 0 
-            && y < HEIGHT 
-            && x >= 0 
-            && x < WIDTH 
-            && predBoard[y][x] === currPlayer);
-		}
-        
-
-        for (let y = 0; y < HEIGHT; y++) {
-            for (let x = 0; x < WIDTH; x++) {
-              var horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
-              var vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
-              var diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
-              var diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
-        
-              if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
-                wins.push([yMove,xMove]);
-              }
-            }
-          }
-
-	}  
-    return wins;
-
-}
-let count=0;
-function aiTurn(){
-    const winningSpot=checkWin(player1,dummyBoard);
-    const losingSpot=checkWin(player2,dummyBoard);
-
-    if(winningSpot.length>0){
-        return moveHere(winningSpot[0]);
-    }
-    else if(losingSpot.length>0){
-        return moveHere(losingSpot[0]);
-    }
-    else if(count>4){
-        
-
-    
-    const firstMove=simulateMoves(player1,dummyBoard);
-    const flaggedSpots=[];
-    removeFlaggedSpots(firstMove);
-
-    const secondMove=[];
-    simulateSecondMoves(firstMove,secondMove);
-    const potentialWinningSpotsFromSecondMove= findPotentialWinningSpots(secondMove);
-    
-    
-    
-    const thirdMove=[];
-    simulateThirdMoves(secondMove,thirdMove);     
-    const leastLoses= leastLosesF(thirdMove);
-    //console.log(potentialWinningSpotsFromSecondMove,leastLoses) 
-
-    function removeFlaggedSpots(firstMove){
-        firstMove.forEach((board,i)=>{
-            //const flaggedSpots=[];
-            const winningSpot=checkWin(player2,board);
-            if(winningSpot.length>0){
-                const flaggedSpot= JSON.parse(JSON.stringify(winningSpot));
-               flaggedSpot[0][0]=flaggedSpot[0][0]+1;
-               flaggedSpots.push(flaggedSpot[0])    
-               firstMove.splice(i,1);
-            }        
-        })
-    
-    }
-
-    function findPotentialWinningSpots(secondMove){
-
-        const potentialWinningBoards=[];
-    for(let arrBoard of secondMove){
-        for(let board of arrBoard){
-            const winningSpot=checkWin(player1,board);
-            if(winningSpot.length>0){
-                //console.log(winningSpot,"for board", firstMove[secondMove.indexOf(arrBoard)]);
-    
-                potentialWinningBoards.push(findMoveFromBoard(firstMove[secondMove.indexOf(arrBoard)],dummyBoard));
-                break;
-               
-            }
-    
-       
-        }
-    }
-    return potentialWinningBoards;
-    }
-
-    function leastLosesF(thirdMove){
-        const firstMoveNLoses=[]
-        let c=0;
-        let thisArr=[];
-        for(let first of thirdMove){
-            
-           
-            for(let second of first){
-                for(let board of second){
-                   //  console.log(board);
-                   const winningSpot=checkWin(player2,board);                    
-                    
-                   if(winningSpot.length>0){
-                      // console.log(board,"winningspot:",winningSpot);
-                       c++;
-                       
-                      // console.log(thirdMove.indexOf(first));
-                       
-                   }
-                }
-            }
-            thisArr.push(c);
-           c=0;
-    
-        }
-     
-        const min = Math.min(...thisArr)
-       // console.log(min,"of arr",thisArr,"index of", thisArr.indexOf(min));
-        return thisArr.indexOf(min);
-    
-       };
-
-
-    //console.log(potentialWinningSpotsFromSecondMove[0],"and",findMoveFromBoard(firstMove[leastLoses],dummyBoard));
-    // if(leastLoses.length===0){
-    //     move random
-    // })
-  //  if(potentialWinningSpotsFromSecondMove[0]!=undefined){
-   // return moveHere(potentialWinningSpotsFromSecondMove[0]);
-   // }
-  //  else
-    return findMoveFromBoard(firstMove[leastLoses],dummyBoard);
-}
-else{
-    possibleMoves=checkPosMoves(dummyBoard);
-    let rand=Math.floor(Math.random()*possibleMoves.length);
-    
-    count++;
-    return moveHere(possibleMoves[rand]);
-}
-    
-}
-
-
-
-
-
-
-
 
