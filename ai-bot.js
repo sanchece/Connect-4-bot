@@ -1,17 +1,17 @@
 const sim = [
-	[ 0, 0, 0, 0, 0, 0, 0 ],
-	[ 0, 0, 0, 0, 0, 0, 0 ],
-	[ 0, 0, 0, 0, 0, 0, 0 ],
-	[ 0, 0, 0, 0, 0, 0, 0 ],
-	[ 0, 0, 1, 0, 0, 0, 0 ],
-	[ 0, 0, 2, 1, 0, 0, 0 ]
+	[ 1, 1, 0, 1, 1, 1, 2 ],
+	[ 1, 1, 0, 2, 2, 2, 1 ],
+	[ 2, 1, 0, 1, 1, 1, 2 ],
+	[ 1, 2, 0, 2, 2, 2, 1 ],
+	[ 1, 2, 0, 2, 1, 2, 2 ],
+	[ 1, 2, 2, 1, 2, 2, 2 ]
 ];
 
-const dummyBoard = board;
+const dummyBoard = sim;
 
 const bot = 1;
 const human = 2;
-let count = 0;
+let count = 1;
 
 function aiTurn() {
 	const winningSpot = checkWin(bot, dummyBoard);
@@ -70,8 +70,13 @@ function aiTurn() {
 		else if (possibleWins.length>0) {
 			return moveHere(possibleWins[0]);
 		}
-		else{
+		else if(possibleWins.length>0){
 			return moveHere(possibleWins2);
+		}
+		else{
+			let possibleMoves = checkPosMoves(dummyBoard);
+			let rand=Math.floor(Math.random()*possibleMoves.length);
+		 	return moveHere(possibleMoves[rand]);
 		}
 	}
 }
@@ -113,6 +118,9 @@ function findPotentialWinningSpots2(fourthMove, firstMoves) {
 		}
 		thisArr2.push(c2);
 		c2 = 0;
+	}
+	if(thisArr2.length<1){
+		return [];
 	}
 	const max = Math.max(...thisArr2);
 	// console.log(thisArr2,"<--thisArr, min-->",max);
@@ -175,8 +183,11 @@ function findLeastLosingSpot(thirdMove, firstMoves) {
 		thisArr.push(c);
 		c = 0;
 	}
+	if(thisArr.length<1){
+		return [];
+	}
 	const min = Math.min(...thisArr);
-	// console.log(thisArr,"<--thisArr, min-->",min);
+	console.log(thisArr,"<--thisArr, min-->",min);
 	// console.log(thisArr.indexOf(min),"<--index. move--> ",findMoveFromBoard(firstMoves[thisArr.indexOf(min)],dummyBoard));
 	return findMoveFromBoard(firstMoves[thisArr.indexOf(min)], dummyBoard);
 }
