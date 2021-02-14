@@ -19,14 +19,6 @@ function aiTurn() {
 	const firstMoves = makeBoards(bot, dummyBoard); //bot
 	removeFlaggedSpotsFromFM(firstMoves);
 
-	const secondMoves = makeBoardsForFM(firstMoves); //human
-	const possibleWins = findPotentialWinningSpots(secondMoves, firstMoves);
-
-	const thirdMoves = makeBoardsForSM(secondMoves); //bot
-	const leastLoses = findLeastLosingSpot(thirdMoves, firstMoves);
-
-	const fourthMoves = makeBoardsForTM(thirdMoves); //human
-	const possibleWins2 = findPotentialWinningSpots2(fourthMoves, firstMoves);
 
 	if (winningSpot.length > 0) {
 		count++;
@@ -49,13 +41,24 @@ function aiTurn() {
 
 		return moveHere(possibleMoves[rand]);
 	} else {
+		const secondMoves = makeBoardsForFM(firstMoves); //human
+		const possibleWins = findPotentialWinningSpots(secondMoves, firstMoves);
+	
+		const thirdMoves = makeBoardsForSM(secondMoves); //bot
+		const leastLoses = findLeastLosingSpot(thirdMoves, firstMoves);
+	
+	
 		if (leastLoses.length > 0) {
 			return moveHere(leastLoses);
 		} else if (possibleWins.length > 0) {
 			return moveHere(possibleWins[0]);
-		} else if (possibleWins.length > 0) {
-			return moveHere(possibleWins2);
-		} else {
+		} 
+		 else {
+			const fourthMoves = makeBoardsForTM(thirdMoves); //human
+			const possibleWins2 = findPotentialWinningSpots2(fourthMoves, firstMoves);
+			 if (possibleWins.length > 0) {
+				return moveHere(possibleWins2);
+			 }
 			let possibleMoves = checkPosMoves(dummyBoard);
 			for (let thisMove of possibleMoves) {
 				let y = thisMove[0];
@@ -66,7 +69,6 @@ function aiTurn() {
 			}
 			//	 possibleMoves=checkPosMoves(dummyBoard);
 			let rand = Math.floor(Math.random() * possibleMoves.length);
-
 			return moveHere(possibleMoves[rand]);
 		}
 	}
