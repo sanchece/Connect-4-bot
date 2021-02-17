@@ -11,22 +11,25 @@
     <p>Connect 4</p>
 </div>
 
-<form id="start-form">
+<div id="start-menu">
   <p>
-      <button id="againstFriend"> Play against friend</button>
-      <button id="againstCPU"> Play against CPU</button>
+      <button id="againstFriend" onClick="game.handleClickStart(false);"> Play against friend</button>
+      <button id="againstCPU" onClick="game.handleClickStart(true);"> Play against CPU</button>
   </p>
-</form>
+</div>
+
 </div>
 
 <div id="game">
-  <table id="boardM"></table>
+  <table id="board"></table>
 </div>
 
 
 
  
-<script src="connect4.js"></script>
+<!-- <script src="connect4.js"></script> -->
+
+<script src="connect4-oo.js"></script>
 <script src="ai-bot.js"></script>
 
 
