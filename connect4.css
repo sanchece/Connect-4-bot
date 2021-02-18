@@ -25,7 +25,7 @@ body {
 	padding-bottom: .2em;
 	text-align: center;
 	/* background-color:tomato; */
-	font-size: 2rem;
+	font-size: 2.8rem;
 	font-family: 'Press Start 2P', cursive;
 	perspective: 500px;
 }
@@ -47,8 +47,9 @@ button{
   border:none;
   background-color:orange;
   height:2em;
-  width:400px;
+  width:500px;
   margin-bottom:40px;
+  font-size: 1em ;
 }
 
 
@@ -113,11 +114,12 @@ button{
 
 @media  (max-width: 1200px) {
   #title{
-    font: size 2.8rem;
+    font-size: 3.4rem;
   }
   button{
-    height:2.6em;
-    width:500px;
+    height:2.4em;
+    width:620px;
+    font-size:2em;
   }
   #board td {
     width: 80px;
