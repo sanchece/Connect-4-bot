@@ -81,7 +81,11 @@ class Game {
 		spot.append(piece);
 	}
 	endGame(msg) {
-    setTimeout(()=>alert(msg),300)
+		setTimeout(()=>{if(confirm(msg)) {
+			location.reload();
+		  }},300)
+		
+
 	}
 
 	moveHuman(evt) {
@@ -105,13 +109,14 @@ class Game {
 		if (this.checkForWin(this.currPlayer, this.board)) {
 			this.gameOver = true;
 			if(this.currPlayer===2){
-				return this.endGame(`AI won!`);
+				return this.endGame(`AIwon!`);
 			}
 			return this.endGame(`Player ${this.currPlayer} won!`);
 		}
 		// check for tie
 		if (this.board.every((row) => row.every((cell) => cell))) {
 			return this.endGame('Tie!');
+			
 		}
 		// switch players
 		if (this.currPlayer === this.players[0]) {
