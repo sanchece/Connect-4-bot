@@ -104,6 +104,9 @@ class Game {
 		// check for win
 		if (this.checkForWin(this.currPlayer, this.board)) {
 			this.gameOver = true;
+			if(this.currPlayer===2){
+				return this.endGame(`Carlos Sanchez won!`);
+			}
 			return this.endGame(`Player ${this.currPlayer} won!`);
 		}
 		// check for tie
@@ -127,7 +130,7 @@ class Game {
     setTimeout(()=>{
       this.placeInTable(y, x);
       this.evaluateMove();}
-    ,0)
+    ,100)
 		
 	}
 

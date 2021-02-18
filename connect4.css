@@ -19,7 +19,7 @@ body {
 }
 #title {
 	width: 100%;
-	padding-top: 6em;
+	padding-top: 4em;
 	padding-bottom: .2em;
 	text-align: center;
 	/* background-color:tomato; */
@@ -28,19 +28,29 @@ body {
 	perspective: 500px;
 }
 
-#start-form {
+
+#start-menu {
 	width: 100%;
 	text-align: center;
+  flex-wrap:wrap;
+  /* justify-content: space-around; */
+  /* align-items:center;
+  /* align-content:space-around; */
+  /* align-items: center;  */
+
 
 }
 button{
   font-family: 'Press Start 2P', cursive;
   border:none;
   background-color:orange;
-  height:2.4em;
-
+  height:2em;
+  width:400px;
+  margin-bottom:40px;
 }
-#start-form button:hover {
+
+
+#start-menu button:hover {
   background-color: rgb(216, 216, 216);
   border-style:none;
 }
@@ -56,7 +66,7 @@ button{
 }
 /* game board table */
 
-#boardM td {
+#board td {
   width: 50px;
   height: 50px;
   border: solid 2px rgb(55, 136, 1);
@@ -69,7 +79,7 @@ button{
 .piece {
   /* TODO: make into circles */
   border-radius: 50%;
-  margin: 5px;
+  margin: 0 auto;
   width: 80%;
   height: 80%;
  
@@ -97,4 +107,18 @@ button{
 #column-top td:hover {
   background-color: rgb(216, 216, 216);
   border-style:none;
+}
+
+@media  (max-width: 900px) {
+  #title{
+    font: size 2.8rem;
+  }
+  button{
+    height:2.6em;
+    width:500px;
+  }
+  #board td {
+    width: 80px;
+    height: 80px;
+  }
 }
