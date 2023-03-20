@@ -51,6 +51,7 @@ button{
   width:500px;
   margin-bottom:40px;
   font-size: 1em ;
+  color:white;
 }
 
 
@@ -109,7 +110,7 @@ button{
 }
 
 #column-top td:hover {
-  background-color: rgb(216, 216, 216);
+  background-color: rgb(2, 56, 231);
   border-style:none;
 }
 
@@ -130,11 +131,13 @@ button{
 
 #whatThe {
   visibility: hidden;
+  position:relative;
+  left: 270px;
 }
 
 #really {
   visibility: hidden;
   position:absolute;
   top:260px;
-  left: 200px;
+  left: 250px;
 }
