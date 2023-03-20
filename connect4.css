@@ -110,7 +110,7 @@ button{
 }
 
 #column-top td:hover {
-  background-color: rgb(2, 56, 231);
+  background-color: rgb(216, 216, 216);
   border-style:none;
 }
 
@@ -124,20 +124,24 @@ button{
     font-size:2em;
   }
   #board td {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
   }
-}
-
-#whatThe {
-  visibility: hidden;
-  position:relative;
-  left: 270px;
 }
 
 #really {
   visibility: hidden;
-  position:absolute;
-  top:260px;
+  position:relative;
+  width:500px;
+  padding-top:150px;
+  /* top:100px; */
   left: 250px;
+}
+
+#whatThe {
+  visibility: hidden;
+  position:absolute;
+  width: 380px ;
+  left: 270px;
+  top:-10px; 
 }
