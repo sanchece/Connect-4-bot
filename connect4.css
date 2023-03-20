@@ -135,13 +135,13 @@ button{
   width:500px;
   padding-top:150px;
   /* top:100px; */
-  left: 250px;
+  left: 100px;
 }
 
 #whatThe {
   visibility: hidden;
   position:absolute;
   width: 380px ;
-  left: 270px;
+  left: 250px;
   top:-10px; 
 }
