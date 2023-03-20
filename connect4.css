@@ -1,6 +1,6 @@
 body {
 	background-color: rgb(3, 0, 0);
-	color: orange;
+	color: #008F11;
   
 }
 
@@ -45,7 +45,8 @@ body {
 button{
   font-family: 'Press Start 2P', cursive;
   border:none;
-  background-color:orange;
+  border-radius: 10px;
+  background-color:#008F11;;
   height:2em;
   width:500px;
   margin-bottom:40px;
@@ -125,4 +126,15 @@ button{
     width: 80px;
     height: 80px;
   }
+}
+
+#whatThe {
+  visibility: hidden;
+}
+
+#really {
+  visibility: hidden;
+  position:absolute;
+  top:260px;
+  left: 200px;
 }

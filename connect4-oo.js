@@ -22,7 +22,9 @@ class Game {
 	handleClickStart(player) {
 		this.player = player;
 		const start = document.getElementById('flex-box');
+		let leiahThinking = document.getElementById("really") ;
 		start.setAttribute('class', 'hidden');
+		leiahThinking.style.visibility = "visible" ;
 		this.makeBoard();
 		this.makeHtmlBoard();
 	}
@@ -109,9 +111,9 @@ class Game {
 		if (this.checkForWin(this.currPlayer, this.board)) {
 			this.gameOver = true;
 			if(this.currPlayer===2){
-				return this.endGame(`AIwon!`);
+				return this.endGame(`Leiah won!`);
 			}
-			return this.endGame(`Player ${this.currPlayer} won!`);
+			return this.endGame(`Leiah let you win!`);
 		}
 		// check for tie
 		if (this.board.every((row) => row.every((cell) => cell))) {
@@ -127,15 +129,21 @@ class Game {
 		}
 	}
 	moveAI() {
+		let leiahMoving = document.getElementById("whatThe") ;
+		let leiahThinking = document.getElementById("really") ;
 		let move = aiTurn(this.board);
 		let y = move[0];
 		let x = move[1];
-
+		leiahMoving.style.visibility = "visible" ;
+		leiahThinking.style.visibility = "hidden" ;
 		this.board[y][x] = this.currPlayer;
     setTimeout(()=>{
       this.placeInTable(y, x);
-      this.evaluateMove();}
-    ,100)
+      this.evaluateMove();
+	  leiahMoving.style.visibility = "hidden" ;
+	  leiahThinking.style.visibility = "visible" ;
+	}
+    ,700)
 		
 	}
 
